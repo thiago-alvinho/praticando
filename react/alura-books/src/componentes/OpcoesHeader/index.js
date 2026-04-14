@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 const Opcoes = styled.ul`
     display: flex;
@@ -21,7 +22,13 @@ function OpcoesHeader() {
 
     return (
         <Opcoes>
-            { opcoes.map ( (opcao) => ( <Opcao><p>{opcao}</p></Opcao>) )}
+            { opcoes.map ( (opcao) => ( 
+                <Link key={opcao} to={`/${opcao.toLowerCase()}`}>
+                    <Opcao>
+                        <p>{opcao}</p>
+                    </Opcao>
+                </Link>
+            ))}
         </Opcoes>
     );
 

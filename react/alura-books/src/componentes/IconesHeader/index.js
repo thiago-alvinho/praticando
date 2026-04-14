@@ -15,7 +15,13 @@ const icones = [sacola, perfil];
 function IconesHeader() {
     return (
         <Icones>
-            { icones.map( (icone) => (<Icone><img src={icone} alt='icone'></img></Icone>))}
+            {/* Adicionamos o 'index' aqui nos parâmetros */}
+            { icones.map( (icone, index) => (
+                // E passamos o 'index' como a prop 'key' no elemento pai <Icone>
+                <Icone key={index}>
+                    <img src={icone} alt='icone'></img>
+                </Icone>
+            ))}
         </Icones>
     );
 }
