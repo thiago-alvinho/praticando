@@ -1,3 +1,5 @@
+const converterStringToNumber = require('../utils/converterStringToNumber');
+
 class Controller {
     constructor(entityService) {
         this.entityService = entityService;
@@ -8,7 +10,7 @@ class Controller {
             const allRegistries = await this.entityService.getAll();
             return res.status(200).json(allRegistries);
         } catch (error) {
-            // error
+            return res.status(500).json({ error: error.message})
         }
     }
 
@@ -18,7 +20,18 @@ class Controller {
             const registry = await this.entityService.getById(Number(id));
             return res.status(200).json(registry);
         } catch(error) {
-            // error
+            return res.status(500).json({ error: error.message})
+        }
+    }
+
+    async getByParams(req, res) {
+        const { ...params } = req.params;
+        const where = converterStringToNumber(params);
+        try {
+            const registry = await this.entityService.getByParams(where);
+            return res.status(200).json(registry);
+        } catch(error) {
+            return res.status(500).json({ error: error.message})
         }
     }
 
@@ -34,23 +47,24 @@ class Controller {
             return res.status(201).json({ message: "Registry have been createad with sucess"});
 
         } catch(error) {
-            console.log(error);
+            return res.status(500).json({ error: error.message})
         }
     }
 
-    async updateById(req, res) {
+    async updateParams(req, res) {
         const data = req.body;
-        const { id } = req.params;
+        const { ...params } = req.params;
+        const where = converterStringToNumber(params);
 
         try {
-            const isUpdated = await this.entityService.updateById(Number(id), data);
+            const isUpdated = await this.entityService.updateParams(where, data);
             if(!isUpdated) {
                 return res.status(400).json({ message: "User hasn't been updated"});
             }
 
             return res.status(200).json({ message: 'Users has been updated'});
         } catch(error) {
-            // error
+            return res.status(500).json({ error: error.message})
         }
     }
 
@@ -62,9 +76,9 @@ class Controller {
             if(!isDeleted) {
                 return res.status(400).json({ message: "User hasn't been deleted" });
             }
-            return res.status(200).json({ message: 'User has been deleted' });
+            return res.status(204).json({ message: 'User has been deleted' });
         } catch(error) {
-            // error
+            return res.status(500).json({ error: error.message})
         }
     }
 }
